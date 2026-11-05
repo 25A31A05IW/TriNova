@@ -1,0 +1,27 @@
+AgriSmart AI
+1. Introduction:
+   Our project is AgriSmart AI. It helps farmers choose the best crops using Artificial Intelligence.
+2. Problem:
+   Farmers face problems in selecting crops, managing water, fertilizers, and budget.
+3. Solution:
+   Our AI system suggests suitable crops and predicts crop production.
+4. How it works:
+   Enter soil details.
+   Enter weather details.
+   Enter budget.
+   AI selects the best crops.
+   It predicts crop yield.
+   It shows expected profit.
+5. Innovation:
+   Our project saves water, reduces fertilizer wastage, and supports Telugu and English.
+6. Objectives:
+   Increase crop production.
+   Reduce wastage.
+   Save water.
+   Help farmers earn better profits.
+7. System Architecture:
+   Farmer Input → AI Model → Resource Optimization → Dashboard.
+8. Technologies:
+   Python, Flask, HTML, CSS, JavaScript and Machine Learning.
+9. Conclusion:
+   Our main aim is to help farmers make smart farming decisions and improve agriculture.
