@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Crop & Resource Optimizer</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #071b16;
+            color: white;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: auto;
+            padding: 25px;
+        }
+
+        header {
+            padding: 10px 0 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #123d31;
+            color: #8df0c4;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        h1 {
+            margin: 12px 0 5px;
+            font-size: 30px;
+        }
+
+        .subtitle {
+            color: #a9cbc0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .card {
+            background: #0d2922;
+            border: 1px solid #235247;
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 12px 0 6px;
+            color: #bdd5ce;
+            font-size: 14px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 9px;
+            border: 1px solid #37665a;
+            background: #09211b;
+            color: white;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 18px;
+            border: none;
+            border-radius: 10px;
+            background: #52d99e;
+            color: #062119;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .result {
+            display: none;
+        }
+
+        .score {
+            font-size: 34px;
+            font-weight: bold;
+            color: #65e6a6;
+        }
+
+        .bar {
+            height: 12px;
+            background: #183d34;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 10px 0 18px;
+        }
+
+        .fill {
+            height: 100%;
+            width: 0%;
+            background: #52d99e;
+            transition: 0.5s;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #21483e;
+        }
+
+        .recommend {
+            margin-top: 16px;
+            background: #09251e;
+            border: 1px dashed #52d99e;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .resource {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .resource div {
+            background: #12352c;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .small {
+            font-size: 12px;
+            color: #a9cbc0;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #8caea4;
+            margin-top: 18px;
+        }
+
+        @media(max-width:760px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .resource {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+
+        <span class="badge">
+            🤖 AI + 🌾 SMART AGRICULTURE
+        </span>
+
+        <h1>
+            AI-Based Crop & Agricultural Resource Optimization System
+        </h1>
+
+        <div class="subtitle">
+            Helping farmers choose suitable crops and use water,
+            fertilizer and other resources efficiently.
+        </div>
+
+    </header>
+
+
+    <div class="grid">
+
+        <!-- INPUT SECTION -->
+
+        <section class="card">
+
+            <h2>🌱 Farm Data</h2>
+
+            <label>Soil Type</label>
+
+            <select id="soil">
+
+                <option value="loamy">
+                    Loamy
+                </option>
+
+                <option value="clay">
+                    Clay
+                </option>
+
+                <option value="sandy">
+                    Sandy
+                </option>
+
+            </select>
+
+
+            <label>
+                Soil Moisture (%)
+            </label>
+
+            <input
+                id="moisture"
+                type="number"
+                value="58"
+                min="0"
+                max="100"
+            >
+
+
+            <label>
+                Available Water (L/day)
+            </label>
+
+            <input
+                id="water"
+                type="number"
+                value="500"
+                min="0"
+            >
+
+
+            <label>
+                Expected Rainfall (mm)
+            </label>
+
+            <input
+                id="rain"
+                type="number"
+                value="45"
+                min="0"
+            >
+
+
+            <label>
+                Temperature (°C)
+            </label>
+
+            <input
+                id="temp"
+                type="number"
+                value="29"
+            >
+
+
+            <label>
+                Farm Area (acres)
+            </label>
+
+            <input
+                id="area"
+                type="number"
+                value="2"
+                min="0.1"
+                step="0.1"
+            >
+
+
+            <button onclick="optimize()">
+                🤖 ANALYZE & OPTIMIZE
+            </button>
+
+        </section>
+
+
+        <!-- RESULT SECTION -->
+
+        <section
+            class="card result"
+            id="result"
+        >
+
+            <h2>
+                📊 AI Optimization Result
+            </h2>
+
+
+            <div class="small">
+                Recommended Crop
+            </div>
+
+
+            <div
+                id="crop"
+                class="score"
+            >
+                Paddy
+            </div>
+
+
+            <div class="metric">
+
+                <span>
+                    Suitability Score
+                </span>
+
+                <strong id="score">
+                    0/100
+                </strong>
+
+            </div>
+
+
+            <div class="bar">
+
+                <div
+                    id="fill"
+                    class="fill"
+                ></div>
+
+            </div>
+
+
+            <h3>
+                Why this recommendation?
+            </h3>
+
+            <ul id="reasons"></ul>
+
+
+            <!-- RESOURCE PLAN -->
+
+            <div class="recommend">
+
+                <h3>
+                    💧 Resource Plan
+                </h3>
+
+
+                <div class="resource">
+
+                    <div>
+
+                        <b id="waterRec">
+                            --
+                        </b>
+
+                        <br>
+
+                        <span class="small">
+                            Water/day
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <b id="fertRec">
+                            --
+                        </b>
+
+                        <br>
+
+                        <span class="small">
+                            Fertilizer
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <b id="effRec">
+                            --
+                        </b>
+
+                        <br>
+
+                        <span class="small">
+                            Efficiency
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- AI RECOMMENDATION -->
+
+            <div class="recommend">
+
+                <h3>
+                    🤖 AI Recommendation
+                </h3>
+
+                <p id="action"></p>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <div class="footer">
+
+        Prototype/demo model.
+        Recommendations are illustrative and should not be treated
+        as professional agricultural advice.
+
+    </div>
+
+</div>
+
+
+<script>
+
+function optimize() {
+
+    // Get user inputs
+
+    const soil =
+        document.getElementById("soil").value;
+
+    const moisture =
+        Number(
+            document.getElementById("moisture").value
+        );
+
+    const water =
+        Number(
+            document.getElementById("water").value
+        );
+
+    const rain =
+        Number(
+            document.getElementById("rain").value
+        );
+
+    const temp =
+        Number(
+            document.getElementById("temp").value
+        );
+
+    const area =
+        Number(
+            document.getElementById("area").value
+        );
+
+
+    // Crop candidates
+
+    let candidates = [
+
+        {
+            name: "Paddy",
+            score: 55,
+            baseWater: 220
+        },
+
+        {
+            name: "Maize",
+            score: 60,
+            baseWater: 150
+        },
+
+        {
+            name: "Groundnut",
+            score: 58,
+            baseWater: 120
+        },
+
+        {
+            name: "Millets",
+            score: 62,
+            baseWater: 80
+        }
+
+    ];
+
+
+    // AI-style scoring logic
+
+    candidates.forEach(crop => {
+
+
+        // Soil suitability
+
+        if (soil === "loamy") {
+
+            crop.score += 10;
+
+        }
+
+
+        if (
+            soil === "clay" &&
+            crop.name === "Paddy"
+        ) {
+
+            crop.score += 15;
+
+        }
+
+
+        if (
+            soil === "sandy" &&
+            (
+                crop.name === "Groundnut" ||
+                crop.name === "Millets"
+            )
+        ) {
+
+            crop.score += 15;
+
+        }
+
+
+        // Rainfall
+
+        if (
+            rain >= 70 &&
+            crop.name === "Millets"
+        ) {
+
+            crop.score += 4;
+
+        }
+
+
+        // Water availability
+
+        if (water < 150) {
+
+            if (
+                crop.name === "Millets" ||
+                crop.name === "Groundnut"
+            ) {
+
+                crop.score += 15;
+
+            }
+
+        }
+
+
+        // Temperature
+
+        if (
+            temp >= 25 &&
+            temp <= 32
+        ) {
+
+            crop.score += 5;
+
+        }
+
+
+        // Soil moisture
+
+        if (
+            moisture > 80 &&
+            crop.name === "Paddy"
+        ) {
+
+            crop.score -= 5;
+
+        }
+
+    });
+
+
+    // Select highest score
+
+    candidates.sort(
+        (a, b) => b.score - a.score
+    );
+
+
+    const best =
+        candidates[0];
+
+
+    const score =
+        Math.min(100, best.score);
+
+
+    // Reasons
+
+    let reasons = [];
+
+    reasons.push(
+        "Soil type was considered for crop suitability."
+    );
+
+    reasons.push(
+        "Available water was compared with crop water needs."
+    );
+
+    reasons.push(
+        "Rainfall and temperature were included."
+    );
+
+    reasons.push(
+        "Current soil moisture was considered before irrigation planning."
+    );
+
+
+    // Resource calculations
+
+    const dailyWater =
+        Math.max(
+            20,
+            Math.round(
+                best.baseWater *
+                area *
+                (rain >= 60 ? 0.75 : 1)
+            )
+        );
+
+
+    const fertilizer =
+        Math.max(
+            1,
+            Math.round(area * 1.8)
+        );
+
+
+    const efficiency =
+        Math.min(
+            95,
+            Math.round(
+                65 +
+                (water < 250 ? 15 : 5) +
+                (rain >= 60 ? 8 : 0)
+            )
+        );
+
+
+    // Show result
+
+    document.getElementById(
+        "result"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "crop"
+    ).textContent =
+        best.name;
+
+
+    document.getElementById(
+        "score"
+    ).textContent =
+        score + "/100";
+
+
+    document.getElementById(
+        "fill"
+    ).style.width =
+        score + "%";
+
+
+    document.getElementById(
+        "reasons"
+    ).innerHTML =
+        reasons
+        .map(
+            reason =>
+                "<li>" +
+                reason +
+                "</li>"
+        )
+        .join("");
+
+
+    document.getElementById(
+        "waterRec"
+    ).textContent =
+        dailyWater + " L";
+
+
+    document.getElementById(
+        "fertRec"
+    ).textContent =
+        fertilizer + " kg";
+
+
+    document.getElementById(
+        "effRec"
+    ).textContent =
+        efficiency + "%";
+
+
+    // AI recommendation
+
+    let action =
+        "Choose " +
+        best.name +
+        " based on the current farm conditions. ";
+
+
+    if (moisture > 75) {
+
+        action +=
+            "Reduce immediate irrigation because soil moisture is already high. ";
+
+    } else {
+
+        action +=
+            "Use irrigation according to soil moisture instead of a fixed schedule. ";
+
+    }
+
+
+    if (rain >= 60) {
+
+        action +=
+            "Expected rainfall may reduce irrigation demand, so review the water plan before the rain.";
+
+    } else {
+
+        action +=
+            "Continue monitoring rainfall and soil moisture and update the plan when conditions change.";
+
+    }
+
+
+    document.getElementById(
+        "action"
+    ).textContent =
+        action;
+
+}
+
+</script>
+
+</body>
+</html>
